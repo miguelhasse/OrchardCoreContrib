@@ -58,7 +58,7 @@ namespace OrchardCore.Notifications.Workflows.Activities
 
             var notification = new Notification(dictionary);
             
-            await _publisher.Publish(notification, string.Join(":", Name, workflowContext.WorkflowId));
+            await _publisher.SendNotication(notification, string.Join(":", Name, workflowContext.WorkflowId));
 
             return Noop();
         }

@@ -12,7 +12,9 @@ namespace OrchardCore.Notifications.ViewModels
     /// </summary>
     public class AzureHubSettingsViewModel : IValidatableObject
     {
-        [RegularExpression(@"\/[A-Za-z0-9][-A-Za-z0-9+&@#\/%?=~_|!:,.;]+[-A-Za-z0-9+&@#\/%=~_|]", ErrorMessage = "Invalid path")]
+        [MinLength(1, ErrorMessage = "Hub name length to short")]
+		[MaxLength(256, ErrorMessage = "Hub name length to long")]
+        [RegularExpression(@"[A-Za-z0-9][-A-Za-z0-9_.]+[-A-Za-z0-9_]", ErrorMessage = "Invalid hub name")]
         public string Hub { get; set; }
 
         [Required(AllowEmptyStrings = false)]

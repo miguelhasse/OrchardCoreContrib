@@ -85,7 +85,7 @@ namespace OrchardCore.Notifications.Drivers
             if (context.GroupId == GroupId)
             {
                 var viewmodel = new AzureHubSettingsViewModel();
-                await context.Updater.TryUpdateModelAsync(model, Prefix);
+                await context.Updater.TryUpdateModelAsync(viewmodel, Prefix);
 
                 configuration[GroupId + nameof(AzureHubSettings.Hub)] = viewmodel.Hub;
                 configuration[GroupId + nameof(AzureHubSettings.Connection)] = viewmodel.Connection;

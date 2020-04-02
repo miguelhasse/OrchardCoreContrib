@@ -59,7 +59,7 @@ namespace OrchardCore.Notifications.Controllers
             {
                 try
                 {
-                    await _publisher.Publish(model.ToModel());
+                    await _publisher.SendNotication(model.ToModel());
                     _notifier.Success(H["Message sent successfully"]);
                 }
                 catch (Exception ex)
