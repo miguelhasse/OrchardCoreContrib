@@ -1,0 +1,61 @@
+@using OrchardCore.Notifications.ViewModels
+@model SignalHubSettingsViewModel
+
+<p class="alert alert-warning">@T["The current tenant will be reloaded when the settings are saved."]</p>
+
+
+<div class="form-group flex-fill" asp-validation-class-for="Connection">
+    <label asp-for="Connection">@T["Connection string"]</label>
+    <input asp-for="Connection" class="form-control" type="text" />
+    <span asp-validation-for="Connection"></span>
+    <span class="hint">@T["The connection string to use."]</span>
+</div>
+
+<div class="form-group" asp-validation-class-for="UseLocal">
+    <div class="custom-control custom-checkbox">
+        <input asp-for="UseLocal" type="checkbox" class="custom-control-input">
+        <label asp-for="UseLocal" class="custom-control-label">@T["Use Local SignalR Hub"]</label>
+        <span class="hint">— @T["If not checked, then Azure SignalR Service will be used."]</span>
+    </div>
+</div>
+
+<div class="form-group flex-fill" asp-validation-class-for="RedisBackplane">
+    <label asp-for="RedisBackplane">@T["Redis backplane"]</label>
+    <input asp-for="RedisBackplane" class="form-control" type="text" />
+    <span asp-validation-for="RedisBackplane"></span>
+    <span class="hint">@T["The Redis backplane connection string if desired."]</span>
+</div>
+
+<div class="form-group" asp-validation-class-for="UseMessagePack">
+    <div class="custom-control custom-checkbox">
+        <input asp-for="UseMessagePack" type="checkbox" class="custom-control-input">
+        <label asp-for="UseMessagePack" class="custom-control-label">@T["Use Message Pack"]</label>
+        <span class="hint">— @T["If checked, then Message Pack will be used."]</span>
+    </div>
+</div>
+
+<script at="Foot" type="text/javascript">
+////<![CDATA[
+    $(function () {
+        var connectionElement = $("#@Html.IdFor(m => m.Connection)");
+        var useLocalElement = $("#@Html.IdFor(m => m.UseLocal)");
+        var redisBackplaneElement = $("#@Html.IdFor(m => m.RedisBackplane)");
+        var useMessagePackElement = $("#@Html.IdFor(m => m.UseMessagePack)");
+
+        function refreshFlows() {
+            if (useLocalElement.prop("checked")) {
+                connectionElement.prop("disabled", 'disabled');
+                redisBackplaneElement.removeAttr("disabled");
+                useMessagePackElement.removeAttr("disabled");
+            } else {
+                connectionElement.removeAttr("disabled");
+                redisBackplaneElement.prop("disabled", 'disabled');
+                useMessagePackElement.prop("disabled", 'disabled');
+            }
+        };
+
+        useLocalElement.change(refreshFlows);
+        refreshFlows();
+    });
+//]]>
+</script>

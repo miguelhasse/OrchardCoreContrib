@@ -1,0 +1,8 @@
+@using OrchardCore.Notifications.Workflows.Activities;
+@model ActivityViewModel<NotificationEvent>
+
+<header>
+    <h4><i class="fa fa-envelope-open"></i>@Model.Activity.GetTitleOrDefault(() => T["Notification"])</h4>
+</header>
+
+<span><em>@(Model.Activity.Filters?.Count() ?? 0)  @T["property filters specified"]</em></span>

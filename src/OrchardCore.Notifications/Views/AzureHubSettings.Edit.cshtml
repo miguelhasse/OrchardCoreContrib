@@ -1,0 +1,27 @@
+@using OrchardCore.Notifications.ViewModels
+@model AzureHubSettingsViewModel
+
+<p class="alert alert-warning">@T["The current tenant will be reloaded when the settings are saved."]</p>
+
+<div class="row">
+    <div class="col-lg-3">
+        <div class="d-flex flex-wrap align-items-center justify-content-stretch">
+            <div class="form-group flex-fill" asp-validation-class-for="Hub">
+                <label asp-for="Hub">@T["Hub name"]</label>
+                <input asp-for="Hub" class="form-control" type="text" />
+                <span asp-validation-for="Hub"></span>
+                <span class="hint">@T["The path to the hub."]</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9">
+        <div class="d-flex flex-wrap align-items-center justify-content-stretch">
+            <div class="form-group flex-fill" asp-validation-class-for="Connection">
+                <label asp-for="Connection">@T["Connection string"]</label>
+                <input asp-for="Connection" class="form-control" type="text" />
+                <span asp-validation-for="Connection"></span>
+                <span class="hint">@T["The connection string to use."]</span>
+            </div>
+        </div>
+    </div>
+</div>

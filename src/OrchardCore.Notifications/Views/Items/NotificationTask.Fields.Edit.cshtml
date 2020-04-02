@@ -1,0 +1,12 @@
+@using OrchardCore.Notifications.Workflows.ViewModels;
+@model NotificationTaskViewModel
+
+@await Component.InvokeAsync("NotificationProperties", Model)
+
+<div class="form-group" asp-validation-class-for="MergeInput">
+    <div class="custom-control custom-checkbox">
+        <input asp-for="MergeInput" type="checkbox" class="custom-control-input">
+        <label asp-for="MergeInput" class="custom-control-label">@T["Merge input properties"]</label>
+        <span class="hint">— @T["If checked, merge incoming properties."]</span>
+    </div>
+</div>

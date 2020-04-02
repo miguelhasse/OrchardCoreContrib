@@ -1,0 +1,13 @@
+@model OrchardCore.Notifications.ViewModels.NotificationViewModel
+
+<h1>@RenderTitleSegments(T["Notifications"])</h1>
+
+<form asp-action="Index" asp-controller="Admin" asp-area="OrchardCore.Notifications" method="post">
+    @Html.ValidationSummary()
+
+    @await Component.InvokeAsync("NotificationProperties", Model)
+
+    <div class="form-group">
+        <button type="submit" class="button grey">@T["Send"]</button>
+    </div>
+</form>

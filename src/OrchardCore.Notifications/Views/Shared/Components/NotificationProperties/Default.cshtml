@@ -1,0 +1,40 @@
+@model OrchardCore.Notifications.ViewModels.NotificationViewModel
+
+<div class="form-group">
+	<h3>@T["Properties"]</h3>
+	<ul class="list-group" id="properties">
+	@for (int i = 0; i < Model.Properties.Count; i++)
+	{
+		<li class="list-group-item">
+			<div class="row">
+				<div class="col-lg-3">
+					<input asp-for="@Model.Properties[i].Name" type="text" class="form-control" placeholder="Enter a name" />
+				</div>
+				<div class="col-lg-9">
+					<input asp-for="@Model.Properties[i].Value" type="text"class="form-control" placeholder="Enter a value" />
+				</div>
+			</div>
+		</li>
+	}
+	</ul>
+</div>
+
+<div class="form-group">
+	<button id="row-add" type="button" class="btn btn-info btn-sm">@T["Add Property"]</button>
+</div>
+
+<script at="Foot" type="text/javascript">
+////<![CDATA[
+    $(function () {
+        $("#row-add").click(function () {
+            var properties = $("#properties");
+            var i = properties.children().length;
+            var name_name = "@Html.NameFor(m => m.Properties[0].Name)".replace("[0]", "[" + i + "]");
+            var value_name = "@Html.NameFor(m => m.Properties[0].Value)".replace("[0]", "[" + i + "]");
+            properties.append('<li class="list-group-item"><div class="row"><div class="col-lg-3">' +
+                '<input type="text" name="' + name_name + '" class="form-control" placeholder="Enter a name" /></div><div class="col-lg-9">' +
+                '<input type="text" name="' + value_name + '" class="form-control" placeholder="Enter a value" /></div></div></li>');
+        });
+    });
+//]]>
+</script>
