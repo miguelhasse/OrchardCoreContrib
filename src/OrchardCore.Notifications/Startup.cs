@@ -40,6 +40,7 @@ namespace OrchardCore.Notifications
             });
 
             services.AddScoped<IEventPublisher, DefaultEventPublisher>();
+            services.AddScoped<TenantConfigurationStore>();
         }
 
         public override void Configure(IApplicationBuilder app, IEndpointRouteBuilder routes, IServiceProvider serviceProvider)

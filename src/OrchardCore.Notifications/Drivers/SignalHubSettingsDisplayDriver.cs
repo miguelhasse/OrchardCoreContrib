@@ -14,13 +14,14 @@ using OrchardCore.Settings;
 
 namespace OrchardCore.Notifications.Drivers
 {
-    public class SignalHubSettingsDisplayDriver : SectionDisplayDriver<ISite, SignalHubSettings>
+    internal class SignalHubSettingsDisplayDriver : SectionDisplayDriver<ISite, SignalHubSettings>
     {
         public const string GroupId = Constants.Features.SignalHub;
 
         private readonly IDataProtectionProvider _dataProtectionProvider;
         private readonly IShellHost _orchardHost;
         private readonly ShellSettings _currentShellSettings;
+        private readonly TenantConfigurationStore _tenantConfigStore;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAuthorizationService _authorizationService;
 
@@ -28,12 +29,14 @@ namespace OrchardCore.Notifications.Drivers
             IDataProtectionProvider dataProtectionProvider,
             IShellHost orchardHost,
             ShellSettings currentShellSettings,
+            TenantConfigurationStore tenantConfigStore,
             IHttpContextAccessor httpContextAccessor,
             IAuthorizationService authorizationService)
         {
             _dataProtectionProvider = dataProtectionProvider;
             _orchardHost = orchardHost;
             _currentShellSettings = currentShellSettings;
+            _tenantConfigStore = tenantConfigStore;
             _httpContextAccessor = httpContextAccessor;
             _authorizationService = authorizationService;
         }
@@ -77,7 +80,6 @@ namespace OrchardCore.Notifications.Drivers
         public override async Task<IDisplayResult> UpdateAsync(ISite model, UpdateEditorContext context)
         {
             var user = _httpContextAccessor.HttpContext?.User;
-            var configuration = _currentShellSettings.ShellConfiguration;
 
             if (!await _authorizationService.AuthorizeAsync(user, Permissions.ManageNotificationSettings))
             {
@@ -89,13 +91,18 @@ namespace OrchardCore.Notifications.Drivers
                 var viewmodel = new SignalHubSettingsViewModel();
                 await context.Updater.TryUpdateModelAsync(viewmodel, Prefix);
 
-                configuration[string.Join(':', GroupId, nameof(SignalHubSettings.Connection))] = viewmodel.Connection;
-                configuration[string.Join(':', GroupId, nameof(SignalHubSettings.UseLocal))] = viewmodel.UseLocal.ToString();
-                configuration[string.Join(':', GroupId, nameof(SignalHubSettings.UseMessagePack))] = viewmodel.UseMessagePack.ToString();
-                configuration[string.Join(':', GroupId, nameof(SignalHubSettings.RedisBackplane))] = viewmodel.RedisBackplane;
+                var settings = new SignalHubSettings
+                {
+                    Connection = viewmodel.Connection,
+                    UseLocal = viewmodel.UseLocal,
+                    RedisBackplane = viewmodel.RedisBackplane,
+                    UseMessagePack = viewmodel.UseMessagePack
+                };
+
+                await _tenantConfigStore.SaveAsync(GroupId, settings);
 
                 // Reload the tenant to apply the settings
-                await _orchardHost.UpdateShellSettingsAsync(_currentShellSettings);
+                await _orchardHost.ReloadShellContextAsync(_currentShellSettings);
             }
 
             return await EditAsync(model, context);
