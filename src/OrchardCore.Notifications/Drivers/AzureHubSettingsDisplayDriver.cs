@@ -93,7 +93,7 @@ namespace OrchardCore.Notifications.Drivers
                 section[nameof(AzureHubSettings.Connection)] = viewmodel.Connection;
 
                 // Reload the tenant to apply the settings
-                await _orchardHost.ReloadShellContextAsync(_currentShellSettings);
+                await _orchardHost.UpdateShellSettingsAsync(_currentShellSettings);
             }
 
             return await EditAsync(model, context);
