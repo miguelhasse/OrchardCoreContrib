@@ -89,10 +89,12 @@ namespace OrchardCore.Notifications.Drivers
                 var viewmodel = new SignalHubSettingsViewModel();
                 await context.Updater.TryUpdateModelAsync(viewmodel, Prefix);
 
-                configuration[GroupId + nameof(SignalHubSettings.Connection)] = viewmodel.Connection;
-                configuration[GroupId + nameof(SignalHubSettings.UseLocal)] = viewmodel.UseLocal.ToString();
-                configuration[GroupId + nameof(SignalHubSettings.UseMessagePack)] = viewmodel.UseMessagePack.ToString();
-                configuration[GroupId + nameof(SignalHubSettings.RedisBackplane)] = viewmodel.RedisBackplane;
+                var section = configuration.GetSection(GroupId);
+
+                section[nameof(SignalHubSettings.Connection)] = viewmodel.Connection;
+                section[nameof(SignalHubSettings.UseLocal)] = viewmodel.UseLocal.ToString();
+                section[nameof(SignalHubSettings.UseMessagePack)] = viewmodel.UseMessagePack.ToString();
+                section[nameof(SignalHubSettings.RedisBackplane)] = viewmodel.RedisBackplane;
 
                 // Reload the tenant to apply the settings
                 await _orchardHost.UpdateShellSettingsAsync(_currentShellSettings);

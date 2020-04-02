@@ -87,8 +87,10 @@ namespace OrchardCore.Notifications.Drivers
                 var viewmodel = new AzureHubSettingsViewModel();
                 await context.Updater.TryUpdateModelAsync(viewmodel, Prefix);
 
-                configuration[GroupId + nameof(AzureHubSettings.Hub)] = viewmodel.Hub;
-                configuration[GroupId + nameof(AzureHubSettings.Connection)] = viewmodel.Connection;
+                var section = configuration.GetSection(GroupId);
+
+                section[nameof(AzureHubSettings.Hub)] = viewmodel.Hub;
+                section[nameof(AzureHubSettings.Connection)] = viewmodel.Connection;
 
                 // Reload the tenant to apply the settings
                 await _orchardHost.ReloadShellContextAsync(_currentShellSettings);
