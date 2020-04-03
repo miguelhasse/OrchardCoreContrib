@@ -21,7 +21,7 @@ namespace OrchardCore.Notifications
 
         public Task Handle(Notification notification, string eventName, CancellationToken cancellationToken)
         {
-            return _pushService.SendNotification(notification.GetProperties(), null);
+            return _pushService.SendNotification(notification.GetProperties());
         }
     }
 }

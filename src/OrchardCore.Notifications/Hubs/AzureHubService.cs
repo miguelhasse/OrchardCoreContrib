@@ -5,17 +5,22 @@ using System.Threading.Tasks;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Azure.NotificationHubs.Messaging;
 using Microsoft.Extensions.Logging;
+using OrchardCore.Settings;
+using Newtonsoft.Json.Linq;
+using OrchardCore.Notifications.ViewModels;
 
 namespace OrchardCore.Notifications.Hubs
 {
     internal class AzureHubService : IPushNotificationService
     {
+        private readonly ISiteService _siteService;
         private readonly INotificationHubFactory _factory;
         private readonly ILogger<AzureHubService> _logger;
 
-        public AzureHubService(INotificationHubFactory factory, ILogger<AzureHubService> logger)
+        public AzureHubService(ISiteService siteService, INotificationHubFactory factory, ILogger<AzureHubService> logger)
         {
-            _factory= factory;
+            _siteService = siteService;
+            _factory = factory;
             _logger = logger;
         }
 
@@ -83,9 +88,16 @@ namespace OrchardCore.Notifications.Hubs
             await _factory.NotificationHubClient.DeleteRegistrationAsync(registrationId);
         }
 
-        public async Task<string> SendNotification(IDictionary<string, string> properties, IEnumerable<string> tags)
+        public async Task<string> SendNotification(IDictionary<string, string> properties)
         {
             var hub = _factory.NotificationHubClient;
+            var tags = await GetNotificationTags();
+
+            if (properties.Remove(nameof(Notification.Tags), out string tagexp) && tagexp != null)
+            {
+                var tagprops = tagexp.Split(',').Select(t => t.Trim());
+                tags = (tags != null) ? tags.Union(tagprops).Take(20) : tagprops;
+            }
 
             try
             {
@@ -99,6 +111,12 @@ namespace OrchardCore.Notifications.Hubs
                 _logger.LogError(exception, "Unhandled exception was thrown during send notification to Azure Notification Hub");
                 throw;
             }
+        }
+
+        private async Task<IEnumerable<string>> GetNotificationTags()
+        {
+            var jtags = (await _siteService.GetSiteSettingsAsync()).Properties[nameof(AzureHubSettingsViewModel.NotificationTags)];
+            return (jtags != null && jtags.Type == JTokenType.Array) ? jtags.Values<string>() : null;
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using Newtonsoft.Json.Linq;
 
 namespace OrchardCore.Notifications
 {
@@ -9,7 +9,10 @@ namespace OrchardCore.Notifications
         public static IDictionary<string, string> GetProperties(this Notification notification)
         { 
             return new Dictionary<string, string>(notification.Select(p =>
-                new KeyValuePair<string, string>(p.Key, p.Value != null ? JToken.FromObject(p.Value).ToString() : null)));
+                new KeyValuePair<string, string>(p.Key, ConvertToString(p.Value))));
         }
+
+        private static string ConvertToString(object value) =>
+            (value != null) ? TypeDescriptor.GetConverter(value).ConvertToInvariantString(value) : null;
     }
 }

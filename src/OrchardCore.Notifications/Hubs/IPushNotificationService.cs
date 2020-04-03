@@ -11,7 +11,7 @@ namespace OrchardCore.Notifications.Hubs
 
         Task Unregister(string registrationId);
 
-        Task<string> SendNotification(IDictionary<string, string> properties, IEnumerable<string> tags);
+        Task<string> SendNotification(IDictionary<string, string> properties);
     }
 
     public enum MobilePlatform

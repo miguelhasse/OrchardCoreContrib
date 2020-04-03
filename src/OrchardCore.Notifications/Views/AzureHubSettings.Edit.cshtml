@@ -25,3 +25,10 @@
         </div>
     </div>
 </div>
+
+<div class="form-group flex-fill" asp-validation-class-for="NotificationTags">
+    <label asp-for="NotificationTags">@T["Notification tags"]</label>
+    <input asp-for="NotificationTags" class="form-control" type="text" />
+    <span asp-validation-for="NotificationTags"></span>
+    <span class="hint">@T["A comma separated list of tags to include in all notifications."]</span>
+</div>

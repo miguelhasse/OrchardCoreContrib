@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OrchardCore.DisplayManagement.Entities;
 using OrchardCore.DisplayManagement.Handlers;
 using OrchardCore.DisplayManagement.Views;
@@ -56,12 +58,16 @@ namespace OrchardCore.Notifications.Drivers
             var section = new AzureHubSettings();
             configuration.GetSection(GroupId).Bind(section);
 
+            var notificationTags = (model.Properties.TryGetValue(nameof(AzureHubSettingsViewModel.NotificationTags), out var tagsprop)
+                && tagsprop.Type == JTokenType.Array) ? string.Join(", ", tagsprop.ToArray().Select(s => s.ToString())) : null;
+
             var shapes = new List<IDisplayResult>
             {
                 Initialize<AzureHubSettingsViewModel>("AzureHubSettings_Edit", model =>
                 {
                     model.Hub = section.Hub;
                     model.Connection = section.Connection;
+                    model.NotificationTags = notificationTags;
                 })
                 .Location("Content")
                 .OnGroup(GroupId)
@@ -91,12 +97,19 @@ namespace OrchardCore.Notifications.Drivers
                 var viewmodel = new AzureHubSettingsViewModel();
                 await context.Updater.TryUpdateModelAsync(viewmodel, Prefix);
 
+                if (!string.IsNullOrWhiteSpace(viewmodel.NotificationTags))
+                {
+                    model.Properties.TryAdd(nameof(AzureHubSettingsViewModel.NotificationTags),
+                        JArray.FromObject(viewmodel.NotificationTags.Split(',').Select(t => t.Trim())));
+                }
+                else model.Properties.Remove(nameof(AzureHubSettingsViewModel.NotificationTags));
+
                 var settings = new AzureHubSettings
                 {
                     Hub = viewmodel.Hub,
                     Connection = viewmodel.Connection
                 };
-                
+
                 await _tenantConfigStore.SaveAsync(GroupId, settings);
 
                 // Reload the tenant to apply the settings
