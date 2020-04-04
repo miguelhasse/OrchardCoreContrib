@@ -7,9 +7,17 @@
 	{
 		<li class="list-group-item">
 			<div class="row">
-				<div class="col-lg-3">
-					<input asp-for="@Model.Properties[i].Name" type="text" class="form-control" placeholder="Enter a name" />
-				</div>
+                <div class="col-lg-3">
+                @if (Model.Properties[i].Reserved)
+                {
+                    <input asp-for="@Model.Properties[i].Name" type="hidden" />
+                    <span class="form-control">@Html.Raw(@Model.Properties[i].Name)</span>
+                }
+                else
+                {
+                    <input asp-for="@Model.Properties[i].Name" type="text" class="form-control" placeholder="Enter a name" />
+                }
+                </div>
 				<div class="col-lg-9">
 					<input asp-for="@Model.Properties[i].Value" type="text"class="form-control" placeholder="Enter a value" />
 				</div>

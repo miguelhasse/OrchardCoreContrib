@@ -96,7 +96,7 @@ namespace OrchardCore.Notifications.Hubs
             if (properties.Remove(nameof(Notification.Tags), out string tagexp) && tagexp != null)
             {
                 var tagprops = tagexp.Split(',').Select(t => t.Trim());
-                tags = (tags != null) ? tags.Union(tagprops).Take(20) : tagprops;
+                tags = ((tags != null) ? tags.Union(tagprops) : tagprops).Distinct().Take(20);
             }
 
             try
