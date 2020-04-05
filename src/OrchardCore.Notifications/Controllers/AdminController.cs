@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using OrchardCore.Admin;
 using OrchardCore.DisplayManagement.Notify;
 using OrchardCore.Notifications;
 using OrchardCore.Notifications.ViewModels;
 
 namespace OrchardCore.Notifications.Controllers
 {
+    [Admin]
     public class AdminController : Controller
     {
         private readonly IAuthorizationService _authorizationService;

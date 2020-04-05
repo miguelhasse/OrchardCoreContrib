@@ -51,35 +51,32 @@ namespace OrchardCore.Notifications.Hubs
         public async Task Register(MobilePlatform platform, string handle, string registrationId, IEnumerable<string> tags)
         {
             var hub = _factory.NotificationHubClient;
-            RegistrationDescription registrationDescription = null;
+            RegistrationDescription registration = null;
 
             switch (platform)
             {
                 case MobilePlatform.Windows:
-                    registrationDescription = new WindowsRegistrationDescription(handle);
+                    registration = new WindowsRegistrationDescription(handle);
                     break;
                 case MobilePlatform.Apple:
-                    registrationDescription = new AppleRegistrationDescription(handle);
+                    registration = new AppleRegistrationDescription(handle);
                     break;
                 case MobilePlatform.Android:
-                    registrationDescription = new FcmRegistrationDescription(handle);
+                    registration = new FcmRegistrationDescription(handle);
                     break;
             }
 
-            registrationDescription.RegistrationId = registrationId;
-
-            if (tags != null)
-            {
-                registrationDescription.Tags = new HashSet<string>(tags);
-            }
+            registration.RegistrationId = registrationId;
+            registration.Tags = new HashSet<string>(tags ?? Enumerable.Empty<string>());
 
             try
             {
-                await hub.CreateOrUpdateRegistrationAsync(registrationDescription);
+                await hub.CreateOrUpdateRegistrationAsync(registration);
             }
             catch (MessagingException exception)
             {
                 _logger.LogError(exception, "Unhandled exception was thrown during registration in Azure Notification Hub");
+                throw;
             }
         }
 

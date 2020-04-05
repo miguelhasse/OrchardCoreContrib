@@ -27,5 +27,16 @@ namespace OrchardCore.Notifications.ViewModels
                 }
             };
         }
+
+        public static NotificationViewModel FromModel(IDictionary<string, string> properties)
+        {
+            properties[nameof(Notification.TimeStamp)] = DateTimeOffset.UtcNow.ToString();
+
+            return new NotificationViewModel
+            {
+                Properties = new List<NotificationProperty>(properties.
+                    Select(prop => new NotificationProperty(prop.Key, prop.Value)))
+            };
+        }
     }
 }
