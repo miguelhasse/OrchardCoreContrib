@@ -3,7 +3,7 @@ using OrchardCore.Notifications;
 
 [assembly: Module(
     Name = "Notifications",
-    Author = "Hitachi Vantara",
+    Author = "Miguel Hasse de Oliveira",
     Version = "0.1.0",
     Description = "Provides notifications service to broadcast events."
 )]
