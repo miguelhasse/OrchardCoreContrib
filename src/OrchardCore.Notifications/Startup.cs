@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using OrchardCore.Admin;
+using OrchardCore.Deployment;
 using OrchardCore.DisplayManagement.Handlers;
 using OrchardCore.Environment.Shell;
 using OrchardCore.Modules;
@@ -14,8 +15,11 @@ using OrchardCore.Mvc.Core.Utilities;
 using OrchardCore.Navigation;
 using OrchardCore.Notifications.Configuration;
 using OrchardCore.Notifications.Controllers;
+using OrchardCore.Notifications.Deployment;
 using OrchardCore.Notifications.Drivers;
 using OrchardCore.Notifications.Hubs;
+using OrchardCore.Notifications.Recipes;
+using OrchardCore.Recipes;
 using OrchardCore.Security.Permissions;
 using OrchardCore.Settings;
 
@@ -38,6 +42,13 @@ namespace OrchardCore.Notifications
                 ServiceDescriptor.Scoped<IPermissionProvider, Permissions>(),
                 ServiceDescriptor.Scoped<INavigationProvider, AdminMenu>(),
             });
+
+            services.AddRecipeExecutionStep<SignalHubSettingsStep>();
+            services.AddRecipeExecutionStep<AzureHubSettingsStep>();
+
+            services.AddTransient<IDeploymentSource, SettingsDeploymentSource>();
+            services.AddSingleton<IDeploymentStepFactory>(new DeploymentStepFactory<SettingsDeploymentStep>());
+            services.AddScoped<IDisplayDriver<DeploymentStep>, SettingsDeploymentStepDriver>();
 
             services.AddScoped<IEventPublisher, DefaultEventPublisher>();
             services.AddScoped<TenantConfigurationStore>();

@@ -39,7 +39,7 @@ namespace OrchardCore.Notifications.Workflows.Activities
 
         public override bool CanExecute(WorkflowExecutionContext workflowContext, ActivityContext activityContext)
         {
-            if (workflowContext.Input["EventName"] is string eventName && TryExtractWorkflowId(eventName, out string workflowId)
+            if (workflowContext.Input["EventName"] is string eventName && TryExtractWorkflowId(eventName, out var workflowId)
                 && workflowContext.CorrelationId == workflowId)
                 return false;
             

@@ -1,0 +1,24 @@
+@using OrchardCore.DisplayManagement.Views
+@using OrchardCore.Notifications.Deployment
+@model ShapeViewModel<SettingsDeploymentStep>
+
+<h5>@T["Notification Settings"]</h5>
+
+<div class="form-group mt-4 mb-5">
+    <div class="row">
+        <div class="col">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" asp-for="Value.IncludeAzureHubSettings" data-reverseToggle=".cdsel">
+                <label class="custom-control-label" asp-for="Value.IncludeAzureHubSettings">@T["Include Notification Hubs settings."]</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" asp-for="Value.IncludeSignalHubSettings" data-reverseToggle=".cdsel">
+                <label class="custom-control-label" asp-for="Value.IncludeSignalHubSettings">@T["Include SignalR Hub/Service settings."]</label>
+            </div>
+        </div>
+    </div>
+</div>

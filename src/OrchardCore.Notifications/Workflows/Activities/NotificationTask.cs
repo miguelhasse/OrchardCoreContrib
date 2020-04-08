@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
-using OrchardCore.Notifications;
 using OrchardCore.Notifications.ViewModels;
 using OrchardCore.Workflows.Abstractions.Models;
 using OrchardCore.Workflows.Activities;
@@ -58,7 +58,7 @@ namespace OrchardCore.Notifications.Workflows.Activities
 
             var notification = new Notification(dictionary);
             
-            await _publisher.SendNotication(notification, string.Join(":", Name, workflowContext.WorkflowId));
+            await _publisher.SendNotication(notification, String.Join(":", Name, workflowContext.WorkflowId));
 
             return Noop();
         }
